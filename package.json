@@ -1,0 +1,18 @@
+{
+  "name": "fossason-extension-raccourcis-en-folie",
+  "version": "1.0.0",
+  "description": "An Electron app with TypeScript that minimizes to the tray",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsc && electron .",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/electron": "^1.6.12",
+    "@types/node": "^22.8.6",
+    "electron": "^33.0.2",
+    "typescript": "^5.6.3"
+  }
+}
