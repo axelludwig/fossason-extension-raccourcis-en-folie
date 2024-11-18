@@ -139,7 +139,8 @@ export class SocketService {
 		});
 	}
 
-	connectWithToken() {
+	connectWithApplicationKey(applicationKey: string) {
+		this.socket.ioSocket.auth = { applicationKey: applicationKey };
 		this.socket.connect();
 	}
 

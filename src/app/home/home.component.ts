@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   }
 
   getUserInfos() {
-    var options: GetOptions = {
+    /*const options: GetOptions = {
       url: "/profile"
     }
     this.axiosService.get(options)
@@ -37,10 +37,15 @@ export class HomeComponent implements OnInit {
         }
       })
       .catch((err) => {
+        console.log(err);
         //On est pas connecté, go se connecter !
         this.sessionStorage.isLoggedIn = false;
-        window.location.href = environment.serverURL + '/auth/google' + (this.sessionStorage.mustUseSelectAccount ? '_select_account' : '');
-      })
+        window.location.href = environment.serverURL + '/auth/google_select_account?state=app';
+      })*/
+
+    const applicationKey: string = "f9499c6a-5e89-4f2f-a9db-11ad57fbf8e7";
+
+    this.socketService.connectWithApplicationKey(applicationKey);
   }
 
   play() {
