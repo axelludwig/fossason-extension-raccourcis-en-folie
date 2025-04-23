@@ -23,6 +23,10 @@
     ],
     "useDefineForClassFields": false
   },
+  "include": [
+    "src/**/*.ts",
+    "src/typings.d.ts"
+  ],
   "exclude": [
     "node_modules"
   ],

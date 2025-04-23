@@ -4,6 +4,7 @@ import { AxiosService, GetOptions } from '../core/services/axios/axios.service';
 import { SessionService } from '../core/services/session/session.service';
 import { SocketService } from '../core/services/socket/socket.service';
 import { environment } from '../core/environments/environment';
+import { StoreService } from '../core/services/store/store.service';
 
 @Component({
   selector: 'app-home',
@@ -12,13 +13,17 @@ import { environment } from '../core/environments/environment';
 })
 export class HomeComponent implements OnInit {
 
-  public isPlaying: boolean = false;
+  // public isPlaying: boolean = false;
 
-  constructor(private router: Router, private axiosService: AxiosService, private sessionStorage: SessionService, private socketService: SocketService) { }
+  constructor(private router: Router, private axiosService: AxiosService, private sessionStorage: SessionService, private socketService: SocketService, private store: StoreService) {
+
+  }
 
   ngOnInit() {
     this.getUserInfos();
   }
+
+
 
   getUserInfos() {
     /*const options: GetOptions = {
@@ -44,12 +49,16 @@ export class HomeComponent implements OnInit {
       })*/
 
     const applicationKey: string = "f9499c6a-5e89-4f2f-a9db-11ad57fbf8e7";
-
     this.socketService.connectWithApplicationKey(applicationKey);
   }
 
-  play() {
-    console.log("play");
-    this.socketService.botChangePauseState(this.isPlaying);
+  toggle() {
+    this.store.playPauseToggle();
+  }
+
+  skip() {
+    console.log("skip");
+    this.store.skipSound();
   }
 }
+
