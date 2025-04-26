@@ -23,8 +23,4 @@ export class AccountParametersComponent {
   save(): void {
     this.apiKeyService.setApiKey(this.apiKey); // enregistre la clé API
   }
-
-  goBack() {
-    this.router.navigate(['/']); // retourne à la page d'accueil
-  }
 }

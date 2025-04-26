@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
   }
 
   openAccountParameters() {
-    this.popupService.openPopup();
+    this.popupService.openAccountPopup();
   }
 }
 

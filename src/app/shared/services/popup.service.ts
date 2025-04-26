@@ -4,13 +4,14 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class PopupService {
-  private ipc = window.require ? window.require('electron').ipcRenderer : null;
-
   constructor() { }
 
-  openPopup() {
-    if (this.ipc) {
-      this.ipc.send('open-popup');
+  openAccountPopup() {
+    console.log('Opening popup...');
+    if ((window as any).electronAPI) {
+      (window as any).electronAPI.openAccountPopup();
+    } else {
+      console.error('Electron API non disponible');
     }
   }
 }

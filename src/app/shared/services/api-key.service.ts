@@ -8,6 +8,7 @@ export class ApiKeyService {
   constructor() { }
 
   getApiKey(): Promise<string | null> {
+    console.log('getApiKey called');
     return window.electronAPI.getApiKey();
   }
 
