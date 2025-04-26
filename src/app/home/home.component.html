@@ -1,11 +1,9 @@
-<div class="app-titlebar">
+<!-- <div class="app-titlebar">
   <span class="app-title"></span>
 
-  <!-- Votre zone Account -->
   <button class="account-btn no-drag" (click)="onAccount()">Account</button>
 
   <div class="window-controls no-drag">
-  <!-- Les contrôles de fenêtre Windows-style -->
     <button class="min-btn" title="Minimize" (click)="minimize()">&#xE921;</button>
     <button class="max-btn" [class.restore]="isMaximized" title="{{ isMaximized ? 'Restore' : 'Maximize' }}"
       (click)="toggleMaxRestore()">
@@ -13,10 +11,10 @@
     </button>
     <button class="close-btn" title="Close" (click)="close()">&#xE8BB;</button>
   </div>
-</div>
+</div> -->
 
 
-<main>
+<main class="draggable">
   <div *ngIf="apiKey">
     <div class="container">
       <button (click)="toggle()"> play pause </button>
