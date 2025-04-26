@@ -76,11 +76,9 @@ function registerMediaKeys(window: BrowserWindow) {
 function createWindow(): BrowserWindow {
   // const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
-  const { width, height } = { width: 400, height: 150 };
+  const { width, height } = { width: 300, height: 52 };
 
   win = new BrowserWindow({
-    x: 0,
-    y: 0,
     width,
     height,
     transparent: true,  // <-- rend la fenêtre transparente
