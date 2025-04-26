@@ -72,18 +72,18 @@ function registerMediaKeys(window: BrowserWindow) {
   }
 }
 
-// Crée la fenêtre principale
 function createWindow(): BrowserWindow {
   // const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-
   const { width, height } = { width: 300, height: 52 };
 
   win = new BrowserWindow({
     width,
     height,
-    transparent: true,  // <-- rend la fenêtre transparente
     frame: false,       // <-- supprime la bordure / barre de titre
-    backgroundColor: '#00000000', // (Windows) assure la vraie transparence
+    transparent: false,       // rend la fenêtre transparente
+    backgroundColor: '#000000', // assure une vraie transparence
+    resizable: true,
+    // backgroundColor: '#00000000', // (Windows) assure la vraie transparence
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,

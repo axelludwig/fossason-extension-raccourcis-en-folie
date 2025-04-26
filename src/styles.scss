@@ -1,16 +1,11 @@
 html,
 body {
   margin: 0;
-  padding: 4px;
-  min-height: 52px;
-  max-height: 52px;
+  padding: 0;
+
+  width: 100vw;
+  height: 100vh;
 
   overflow: hidden;
-
-  height: 100%;
-  font-family: Helvetica, Helvetica, sans-serif;
-  
   border-radius: 8px;
-  background-color: #121212;
 }
-
