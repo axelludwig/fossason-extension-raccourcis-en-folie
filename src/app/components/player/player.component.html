@@ -1,0 +1,65 @@
+<div class="left-player">
+
+    @if (!store.blindTestEnabled || (store.blindTestEnabled && store.isMaster)) {
+    <div matTooltip="{{store.soundPlaying?.Name}}" class="track"> {{store.soundPlaying ?
+        store.soundPlaying.Name : 'no sound playing'}}
+    </div>
+    }
+</div>
+
+<div class="middle-player">
+    <div class="controls">
+        <div class="control-button">
+            <ng-container *ngIf="isPaused ; then paused else play"> </ng-container>
+            <ng-template #paused>
+                <button (click)="togglePause()" mat-mini-fab matTooltip="Play" color="primary">
+                    <mat-icon>play_arrow</mat-icon>
+                </button>
+            </ng-template>
+
+            <ng-template #play>
+                <button (click)="togglePause()" mat-mini-fab matTooltip="Pause" color="primary">
+                    <mat-icon>pause</mat-icon>
+                </button>
+            </ng-template>
+        </div>
+
+        <div class="control-button">
+            <button (click)="skipSound()" mat-mini-fab matTooltip="Skip" color="primary">
+                <mat-icon>skip_next</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <app-sound-timer></app-sound-timer>
+</div>
+
+<div class="right-player">
+    <div class="buttons">
+
+        <button *ngIf="isDevEnv" (click)="debug()" mat-mini-fab matTooltip="Debug" color="primary" class="debug-button">
+            <mat-icon>bug_report</mat-icon>
+        </button>
+
+        <button (click)="openBlindTest($event)" mat-mini-fab matTooltip="Blind test" color="primary"
+            class="blind-test-button">
+            <mat-icon>{{ blindTestIcon }}</mat-icon>
+        </button>
+
+        <button (click)="playRandom($event)" mat-mini-fab matTooltip="Play a random sound" color="primary"
+            class="settings-button">
+            <mat-icon>shuffle</mat-icon>
+        </button>
+
+        <button (click)="openSettings($event)" mat-mini-fab matTooltip="Settings" color="primary" class="random-button">
+            <mat-icon>settings</mat-icon>
+        </button>
+
+    </div>
+
+    <div class="volume">
+        <mat-slider class="mat-slider" min="0" max="1" step="0.01">
+            <input (dragEnd)="onSliderChange($event)" matSliderThumb [(ngModel)]="volume">
+        </mat-slider>
+    </div>
+</div>

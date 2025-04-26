@@ -1,7 +1,8 @@
-import { app, BrowserWindow, screen, ipcMain, Menu } from 'electron';
+import { app, BrowserWindow, screen, ipcMain, Menu, globalShortcut, Tray } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
+
 
 const appName = 'raccourci-en-folie';
 
@@ -41,53 +42,71 @@ function writeApiKey(key: string): void {
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
-const args = process.argv.slice(1),
-  serve = args.some(val => val === '--serve');
+let win: BrowserWindow | null = null;
+let tray: Tray | null = null;
 
+const args = process.argv.slice(1);
+const serve = args.some(val => val === '--serve');
+
+/**
+ * Enregistre les media keys, logge l'événement et envoie un IPC au renderer
+ */
+function registerMediaKeys(window: BrowserWindow) {
+  const mappings: { [accelerator: string]: string } = {
+    'MediaPlayPause': 'media-play-pause',
+    'MediaNextTrack': 'media-next',
+    'MediaPreviousTrack': 'media-prev',
+    'VolumeUp': 'volume-up',
+    'VolumeDown': 'volume-down',
+    'VolumeMute': 'volume-mute',
+  };
+
+  for (const accel of Object.keys(mappings)) {
+    const channel = mappings[accel];
+    globalShortcut.register(accel, () => {
+      console.log(`Media key pressed: ${accel}`);
+      if (!window.isDestroyed()) {
+        window.webContents.send(channel);
+      }
+    });
+  }
+}
+
+// Crée la fenêtre principale
 function createWindow(): BrowserWindow {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
-  const size = screen.getPrimaryDisplay().workAreaSize;
-
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
+  win = new BrowserWindow({
     x: 0,
     y: 0,
-    width: size.width,
-    height: size.height,
+    width,
+    height,
     webPreferences: {
-      nodeIntegration: true,
-      allowRunningInsecureContent: (serve),
-      contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+      allowRunningInsecureContent: serve,
     },
   });
 
   if (serve) {
+    // Mode développement
     const debug = require('electron-debug');
     debug();
-
     require('electron-reloader')(module);
-    mainWindow.loadURL('http://localhost:4200');
+    win.loadURL('http://localhost:4200');
   } else {
-    // Path when running electron executable
-    let pathIndex = './index.html';
-
-    if (fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
-      // Path when running electron in local folder
-      pathIndex = '../dist/index.html';
+    // Mode production : charger le build Angular
+    let indexPath = './index.html';
+    const distPath = path.join(__dirname, '../dist/index.html');
+    if (fs.existsSync(distPath)) {
+      indexPath = '../dist/index.html';
     }
-
-    const url = new URL(path.join('file:', __dirname, pathIndex));
-    mainWindow.loadURL(url.href);
+    win.loadURL(`file://${path.join(__dirname, indexPath)}`);
   }
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', () => {
-    // Dereference the window object, usually you would store window
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
+  win.on('closed', () => {
+    win = null;
   });
 
   const template: Electron.MenuItemConstructorOptions[] = [
@@ -97,7 +116,7 @@ function createWindow(): BrowserWindow {
         {
           label: 'ApiKey',
           click: () => {
-            mainWindow?.webContents.send('open-api-key-popup');
+            win?.webContents.send('open-api-key-popup');
           },
         },
       ],
@@ -107,38 +126,30 @@ function createWindow(): BrowserWindow {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  return mainWindow;
+  return win;
 }
 
-try {
-  // This method will be called when Electron has finished
-  // initialization and is ready to create browser windows.
-  // Some APIs can only be used after this event occurs.
-  // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+// Crée l’icône Tray
+function createTray() {
+  const iconPath = path.join(__dirname, '../src/assets/tray-icon.png');
+  tray = new Tray(iconPath);
 
-  // Quit when all windows are closed.
-  app.on('window-all-closed', () => {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-      app.quit();
-    }
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Afficher la fenêtre', click: () => win?.show() },
+    { label: 'Masquer la fenêtre', click: () => win?.hide() },
+    { type: 'separator' },
+    { label: 'Quitter', click: () => app.quit() },
+  ]);
+
+  tray.setToolTip('Mon Application Electron');
+  tray.setContextMenu(contextMenu);
+
+  tray.on('click', () => {
+    if (win) win.isVisible() ? win.hide() : win.show();
   });
-
-  app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) {
-      createWindow();
-    }
-  });
-
-} catch (e) {
-  // Catch Error
-  // throw e;
 }
 
+// Événements de cycle de vie
 app.whenReady().then(() => {
   ipcMain.handle('get-api-key', () => {
     const value = readApiKey();
@@ -150,4 +161,26 @@ app.whenReady().then(() => {
     console.log('[IPC] set-api-key : ', key);
     writeApiKey(key);
   });
+
+  const mainWindow = createWindow();
+  createTray();
+  registerMediaKeys(mainWindow);
+});
+
+// Nettoyage des raccourcis avant la fermeture de l’app
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (win === null) {
+    const mainWindow = createWindow();
+    registerMediaKeys(mainWindow);
+  }
 });

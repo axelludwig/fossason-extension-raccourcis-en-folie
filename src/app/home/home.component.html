@@ -6,7 +6,10 @@
 
   <div *ngIf="apiKey">
     <!-- <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a> -->
-    <button (click)="play()"> play pause </button>
+    <!-- <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a> -->
+    <button (click)="toggle()"> play pause </button>
+    <button (click)="skip()"> skip </button>
+    <div></div>
 
   </div>
   <div *ngIf="!apiKey">

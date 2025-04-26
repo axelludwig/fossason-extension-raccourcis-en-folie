@@ -1,0 +1,8 @@
+<span [ngStyle]="{visibility: soundTime  === 0 ? 'hidden' : 'visible'}" class="timeText">{{ elapsedTime | date:
+    utils.getFormattedTime(moreThanAnHour) }}</span>
+<mat-slider [min]="0" [max]="1" step="0.001" id="slider">
+    <input matSliderThumb [(ngModel)]="progress" (change)="progressChanged($event, soundTime)">
+</mat-slider>
+<span [ngStyle]="{ visibility: utils.isTimeVisible(soundTime) }" class="timeText">
+    {{ soundTime | date: utils.getFormattedTime(moreThanAnHour) }}
+</span>

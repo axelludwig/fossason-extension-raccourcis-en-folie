@@ -5,6 +5,7 @@ import { SessionService } from '../core/services/session/session.service';
 import { SocketService } from '../core/services/socket/socket.service';
 import { environment } from '../core/environments/environment';
 import { ApiKeyService } from '../shared/services/api-key.service';
+import { StoreService } from '../core/services/store/store.service';
 
 @Component({
   selector: 'app-home',
@@ -17,12 +18,14 @@ export class HomeComponent implements OnInit {
   inputApiKey: string = '';
   apiKey: string = '';
 
-  constructor(private socketService: SocketService, private apiKeyService: ApiKeyService) { }
+  constructor(private socketService: SocketService, private apiKeyService: ApiKeyService, private store: StoreService) { }
 
   async ngOnInit() {
     this.apiKey = await this.apiKeyService.getApiKey() || '';
     this.getUserInfos();
   }
+
+
 
   getUserInfos() {
     console.log("Connecting to API with API key: ", this.apiKey);
@@ -32,4 +35,14 @@ export class HomeComponent implements OnInit {
   play() {
     this.socketService.botChangePauseState(this.isPlaying);
   }
+
+  toggle() {
+    this.store.playPauseToggle();
+  }
+
+  skip() {
+    console.log("skip");
+    this.store.skipSound();
+  }
 }
+
