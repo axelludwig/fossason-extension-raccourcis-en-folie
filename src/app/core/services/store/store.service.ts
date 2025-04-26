@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { SocketService } from '../socket/socket.service';
+import { Sound } from '../../../../declarations';
 
 @Injectable({
     providedIn: 'root'
@@ -7,6 +8,7 @@ import { SocketService } from '../socket/socket.service';
 export class StoreService {
 
     isPlaying = true;
+    soundPlaying: Sound | undefined;
     volume = 0;
 
     constructor(
@@ -55,10 +57,6 @@ export class StoreService {
     }
 
     playPauseToggle() {
-
-        // inverse l’état
-        // this.isPlaying = !this.isPlaying;
-        // envoie au socket
         this.socketService.botChangePauseState(this.isPlaying);
     }
 

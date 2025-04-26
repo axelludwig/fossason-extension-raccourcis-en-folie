@@ -1,13 +1,21 @@
-<main class="draggable">
-  <div *ngIf="apiKey">
+<div class="draggable main">
+  <div class="ngif" *ngIf="apiKey">
     <div class="container">
-      <button class="no-drag" (click)="openAccountParameters()">Account parameters</button> 
-      <button class="no-drag" (click)="toggle()"> play pause </button>
-      <button class="no-drag" (click)="skip()"> skip </button>
+      <button class="no-drag" (click)="openAccountParameters()">settings</button>
+      <button class="no-drag" (click)="store.playPauseToggle()">play pause</button>
+      <button class="no-drag" (click)="store.skipSound()">skip</button>
+    </div>
+
+    <div class="marquee-container" *ngIf="store.soundPlaying" #marqCont>
+      <div class="marquee-content" [style.fontSize.px]="fontSize" [style.color]="color">
+        <div class="marquee-text" #marqText>
+          {{ store.soundPlaying.Name }}
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!apiKey">
+      <h2>Veuillez renseigner votre clé API dans le menu "Account"</h2>
     </div>
   </div>
-
-  <div *ngIf="!apiKey">
-    <h2>Veuillez renseigner votre clé API dans le menu "Account"</h2>
-  </div>
-</main>
+</div>

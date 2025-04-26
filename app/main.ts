@@ -80,11 +80,12 @@ function createWindow(): BrowserWindow {
   win = new BrowserWindow({
     width,
     height,
-    frame: false,       // <-- supprime la bordure / barre de titre
-    transparent: false,       // rend la fenêtre transparente
-    backgroundColor: '#000000', // assure une vraie transparence
+    frame: false,
+    transparent: false,
+    backgroundColor: '#000000',
     resizable: true,
-    // backgroundColor: '#00000000', // (Windows) assure la vraie transparence
+    alwaysOnTop: true,
+    skipTaskbar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
