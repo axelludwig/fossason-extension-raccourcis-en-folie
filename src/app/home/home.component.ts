@@ -4,6 +4,7 @@ import { AxiosService, GetOptions } from '../core/services/axios/axios.service';
 import { SessionService } from '../core/services/session/session.service';
 import { SocketService } from '../core/services/socket/socket.service';
 import { environment } from '../core/environments/environment';
+import { ApiKeyService } from '../shared/services/api-key.service';
 
 @Component({
   selector: 'app-home',
@@ -13,43 +14,22 @@ import { environment } from '../core/environments/environment';
 export class HomeComponent implements OnInit {
 
   public isPlaying: boolean = false;
+  inputApiKey: string = '';
+  apiKey: string = '';
 
-  constructor(private router: Router, private axiosService: AxiosService, private sessionStorage: SessionService, private socketService: SocketService) { }
+  constructor(private socketService: SocketService, private apiKeyService: ApiKeyService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.apiKey = await this.apiKeyService.getApiKey() || '';
     this.getUserInfos();
   }
 
   getUserInfos() {
-    /*const options: GetOptions = {
-      url: "/profile"
-    }
-    this.axiosService.get(options)
-      .then((res: any) => {
-        if (res) {
-          localStorage.setItem('google-connected-user', JSON.stringify(res));
-
-          this.sessionStorage.googleToken = res.token;
-          this.socketService.connectWithToken();
-
-          this.sessionStorage.isLoggedIn = true;
-          this.sessionStorage.mustUseSelectAccount = false;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        //On est pas connecté, go se connecter !
-        this.sessionStorage.isLoggedIn = false;
-        window.location.href = environment.serverURL + '/auth/google_select_account?state=app';
-      })*/
-
-    const applicationKey: string = "f9499c6a-5e89-4f2f-a9db-11ad57fbf8e7";
-
-    this.socketService.connectWithApplicationKey(applicationKey);
+    console.log("Connecting to API with API key: ", this.apiKey);
+    this.socketService.connectWithApplicationKey(this.apiKey);
   }
 
   play() {
-    console.log("play");
     this.socketService.botChangePauseState(this.isPlaying);
   }
 }

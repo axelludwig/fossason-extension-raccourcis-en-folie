@@ -1,12 +1,45 @@
-import { app, BrowserWindow, screen, ipcMain } from 'electron';
+import { app, BrowserWindow, screen, ipcMain, Menu } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 
+const appName = 'raccourci-en-folie';
 
+function getConfigPath(): string {
+  const baseDir =
+    process.platform === 'win32'
+      ? path.join(process.env.APPDATA || os.homedir(), appName)
+      : path.join(os.homedir(), '.config', appName);
 
-// if (environment.production) {
-//   enableProdMode();
-// }
+  if (!fs.existsSync(baseDir)) {
+    fs.mkdirSync(baseDir, { recursive: true });
+  }
+
+  return path.join(baseDir, 'user-data-conf.json');
+}
+
+const configPath = getConfigPath();
+
+function readApiKey(): string | null {
+  if (fs.existsSync(configPath)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      return data.apiKey || null;
+    } catch (err) {
+      console.error('[FICHIER] Erreur lecture fichier config :', err);
+    }
+  }
+  return null;
+}
+
+function writeApiKey(key: string): void {
+  try {
+    fs.writeFileSync(configPath, JSON.stringify({ apiKey: key }, null, 2), 'utf-8');
+    console.log('[FICHIER] Cle API enregistree dans', configPath);
+  } catch (err) {
+    console.error('[FICHIER] Erreur ecriture fichier config :', err);
+  }
+}
 
 let mainWindow: BrowserWindow | null = null;
 const args = process.argv.slice(1),
@@ -25,7 +58,8 @@ function createWindow(): BrowserWindow {
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
-      contextIsolation: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -55,6 +89,23 @@ function createWindow(): BrowserWindow {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  const template: Electron.MenuItemConstructorOptions[] = [
+    {
+      label: 'Account',
+      submenu: [
+        {
+          label: 'ApiKey',
+          click: () => {
+            mainWindow?.webContents.send('open-api-key-popup');
+          },
+        },
+      ],
+    },
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   return mainWindow;
 }
@@ -87,3 +138,16 @@ try {
   // Catch Error
   // throw e;
 }
+
+app.whenReady().then(() => {
+  ipcMain.handle('get-api-key', () => {
+    const value = readApiKey();
+    console.log('[IPC] get-api-key : ', value);
+    return value;
+  });
+
+  ipcMain.handle('set-api-key', (_event, key: string) => {
+    console.log('[IPC] set-api-key : ', key);
+    writeApiKey(key);
+  });
+});
