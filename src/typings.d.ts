@@ -16,6 +16,9 @@ export interface ElectronAPI {
   onVolumeUp(cb: (_: any, args?: any) => void): void;
   onVolumeDown(cb: (_: any, args?: any) => void): void;
   onVolumeMute(cb: (_: any, args?: any) => void): void;
+  getApiKey: () => Promise<string | null>;
+  setApiKey: (key: string) => Promise<void>;
+  openAccountPage: (callback: () => void) => void;
 }
 
 declare global {
@@ -24,4 +27,4 @@ declare global {
   }
 }
 
-export {};
+export { };

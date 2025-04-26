@@ -1,15 +1,5 @@
 import { Injectable } from '@angular/core';
 
-declare global {
-  interface Window {
-    electronAPI: {
-      getApiKey: () => Promise<string | null>;
-      setApiKey: (key: string) => Promise<void>;
-      openAccountPage: (callback: () => void) => void;
-    };
-  }
-}
-
 @Injectable({
   providedIn: 'root'
 })
