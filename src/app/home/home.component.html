@@ -17,6 +17,7 @@
 <main class="draggable">
   <div *ngIf="apiKey">
     <div class="container">
+      <button (click)="openAccountParameters()">Account parameters</button> 
       <button (click)="toggle()"> play pause </button>
       <button (click)="skip()"> skip </button>
     </div>

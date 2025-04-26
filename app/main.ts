@@ -189,3 +189,21 @@ app.on('activate', () => {
     registerMediaKeys(mainWindow);
   }
 });
+
+let v_popup: BrowserWindow | null = null;
+
+ipcMain.on('open-popup', () => {
+  v_popup = new BrowserWindow({
+    width: 400,
+    height: 300,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  v_popup.loadURL('http://localhost:4200/popup'); // ou un chemin spécifique si tu as une route Angular prévue
+  v_popup.on('closed', () => {
+    v_popup = null;
+  });
+});

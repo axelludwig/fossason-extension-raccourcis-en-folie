@@ -6,6 +6,7 @@ import { SocketService } from '../core/services/socket/socket.service';
 import { environment } from '../core/environments/environment';
 import { ApiKeyService } from '../shared/services/api-key.service';
 import { StoreService } from '../core/services/store/store.service';
+import { PopupService } from '../shared/services/popup.service';
 
 @Component({
   selector: 'app-home',
@@ -13,12 +14,11 @@ import { StoreService } from '../core/services/store/store.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
   public isPlaying: boolean = false;
   inputApiKey: string = '';
   apiKey: string = '';
 
-  constructor(private socketService: SocketService, private apiKeyService: ApiKeyService, private store: StoreService) { }
+  constructor(private socketService: SocketService, private apiKeyService: ApiKeyService, private store: StoreService, private popupService: PopupService) { }
 
   async ngOnInit() {
     this.apiKey = await this.apiKeyService.getApiKey() || '';
@@ -43,6 +43,10 @@ export class HomeComponent implements OnInit {
   skip() {
     console.log("skip");
     this.store.skipSound();
+  }
+
+  openAccountParameters() {
+    this.popupService.openPopup();
   }
 }
 
