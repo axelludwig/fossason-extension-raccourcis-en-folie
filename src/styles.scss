@@ -1,89 +1,16 @@
 html,
 body {
   margin: 0;
-  padding: 0;
+  padding: 4px;
+  min-height: 52px;
+  max-height: 52px;
+
+  overflow: hidden;
 
   height: 100%;
   font-family: Helvetica, Helvetica, sans-serif;
+  
+  border-radius: 8px;
   background-color: #121212;
 }
 
-input,
-button {
-  background-color: #1e1e1e;
-  color: #e0e0e0;
-  border: 1px solid #333;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #333;
-  cursor: pointer;
-}
-
-h1 {
-  color: #ffffff;
-}
-
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  -webkit-background-size: cover;
-  background-size: cover;
-
-  .title {
-    color: white;
-    margin: 0;
-    padding: 50px 20px;
-  }
-}
-
-.app-titlebar {
-  -webkit-app-region: drag;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  background: #222;
-  color: #fff;
-}
-
-.window-controls {
-  display: flex;
-  -webkit-app-region: no-drag;
-}
-
-.window-controls button {
-  -webkit-app-region: no-drag;
-  font-family: 'Segoe MDL2 Assets';
-  font-size: 12px;
-  width: 46px;
-  height: 32px;
-  line-height: 32px;
-  background: transparent;
-  border: none;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(0, 0, 0, 0.6);
-  transition: background-color 0.2s ease;
-}
-
-.window-controls button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.window-controls .close-btn:hover {
-  background-color: #E81123;
-  color: #FFF;
-}
-
-.window-controls .max-btn.restore::before {
-  content: '\E923';
-}
