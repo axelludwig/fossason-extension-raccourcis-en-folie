@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, ipcMain, Menu, globalShortcut, Tray } from 'electron';
+import { app, BrowserWindow, screen, ipcMain, Menu, globalShortcut, Tray, Size } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
@@ -74,7 +74,9 @@ function registerMediaKeys(window: BrowserWindow) {
 
 // Crée la fenêtre principale
 function createWindow(): BrowserWindow {
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  // const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+  const { width, height } = { width: 400, height: 150 };
 
   win = new BrowserWindow({
     x: 0,

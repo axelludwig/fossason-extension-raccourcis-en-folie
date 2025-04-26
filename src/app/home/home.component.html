@@ -1,6 +1,20 @@
-<header class="draggable">
-  <button class="no-drag close-button" (click)="close()">X</button>
-</header>
+<div class="app-titlebar">
+  <span class="app-title"></span>
+
+  <!-- Votre zone Account -->
+  <button class="account-btn no-drag" (click)="onAccount()">Account</button>
+
+  <div class="window-controls no-drag">
+  <!-- Les contrôles de fenêtre Windows-style -->
+    <button class="min-btn" title="Minimize" (click)="minimize()">&#xE921;</button>
+    <button class="max-btn" [class.restore]="isMaximized" title="{{ isMaximized ? 'Restore' : 'Maximize' }}"
+      (click)="toggleMaxRestore()">
+      {{ isMaximized ? '&#xE923;' : '&#xE922;' }}
+    </button>
+    <button class="close-btn" title="Close" (click)="close()">&#xE8BB;</button>
+  </div>
+</div>
+
 
 <main>
   <div *ngIf="apiKey">
