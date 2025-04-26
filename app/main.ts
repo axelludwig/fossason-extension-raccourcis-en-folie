@@ -13,12 +13,12 @@ const serve = args.some(val => val === '--serve');
  */
 function registerMediaKeys(window: BrowserWindow) {
   const mappings: { [accelerator: string]: string } = {
-    'MediaPlayPause':     'media-play-pause',
-    'MediaNextTrack':     'media-next',
+    'MediaPlayPause': 'media-play-pause',
+    'MediaNextTrack': 'media-next',
     'MediaPreviousTrack': 'media-prev',
-    'VolumeUp':           'volume-up',
-    'VolumeDown':         'volume-down',
-    'VolumeMute':         'volume-mute',
+    'VolumeUp': 'volume-up',
+    'VolumeDown': 'volume-down',
+    'VolumeMute': 'volume-mute',
   };
 
   for (const accel of Object.keys(mappings)) {
@@ -41,8 +41,10 @@ function createWindow(): BrowserWindow {
     y: 0,
     width,
     height,
+    transparent: true,  // <-- rend la fenêtre transparente
+    frame: false,       // <-- supprime la bordure / barre de titre
+    backgroundColor: '#00000000', // (Windows) assure la vraie transparence
     webPreferences: {
-      // Passage en mode sécurisé preload + contextIsolation
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
@@ -80,9 +82,9 @@ function createTray() {
 
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Afficher la fenêtre', click: () => win?.show() },
-    { label: 'Masquer la fenêtre',  click: () => win?.hide() },
+    { label: 'Masquer la fenêtre', click: () => win?.hide() },
     { type: 'separator' },
-    { label: 'Quitter',            click: () => app.quit() },
+    { label: 'Quitter', click: () => app.quit() },
   ]);
 
   tray.setToolTip('Mon Application Electron');

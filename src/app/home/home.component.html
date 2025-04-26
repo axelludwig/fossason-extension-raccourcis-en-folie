@@ -1,10 +1,12 @@
-<div class="container">
-  PAGE HOME
-  <h1 class="title">
-    {{ 'PAGES.HOME.TITLE' | translate }}
-  </h1>
-
-  <!-- <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a> -->
-   <button (click)="toggle()"> play pause </button>
-   <button (click)="skip()"> skip </button>
-</div>
+<header class="draggable">
+  <!-- zone où l’on peut cliquer-glisser pour déplacer -->
+  <button  class="no-drag close-button" (click)="close()">X</button>
+</header>
+<main>
+  <div class="container">
+    <!-- <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a> -->
+    <button (click)="toggle()"> play pause </button>
+    <button (click)="skip()"> skip </button>
+  </div>
+  <!-- contenu interactif -->
+</main>
