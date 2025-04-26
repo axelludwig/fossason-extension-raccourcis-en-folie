@@ -1,12 +1,16 @@
 <header class="draggable">
-  <!-- zone où l’on peut cliquer-glisser pour déplacer -->
-  <button  class="no-drag close-button" (click)="close()">X</button>
+  <button class="no-drag close-button" (click)="close()">X</button>
 </header>
+
 <main>
-  <div class="container">
-    <!-- <a routerLink="/detail">{{ 'PAGES.HOME.GO_TO_DETAIL' | translate }}</a> -->
-    <button (click)="toggle()"> play pause </button>
-    <button (click)="skip()"> skip </button>
+  <div *ngIf="apiKey">
+    <div class="container">
+      <button (click)="toggle()"> play pause </button>
+      <button (click)="skip()"> skip </button>
+    </div>
   </div>
-  <!-- contenu interactif -->
+
+  <div *ngIf="!apiKey">
+    <h2>Veuillez renseigner votre clé API dans le menu "Account"</h2>
+  </div>
 </main>
