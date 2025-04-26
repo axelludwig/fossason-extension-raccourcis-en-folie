@@ -5,6 +5,7 @@ import * as os from 'os';
 
 
 const appName = 'raccourci-en-folie';
+let v_popup: BrowserWindow | null = null;
 
 function getConfigPath(): string {
   const baseDir =
@@ -112,23 +113,6 @@ function createWindow(): BrowserWindow {
     win = null;
   });
 
-  const template: Electron.MenuItemConstructorOptions[] = [
-    {
-      label: 'Account',
-      submenu: [
-        {
-          label: 'ApiKey',
-          click: () => {
-            win?.webContents.send('open-api-key-popup');
-          },
-        },
-      ],
-    },
-  ];
-
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
-
   return win;
 }
 
@@ -164,6 +148,25 @@ app.whenReady().then(() => {
     console.log('[IPC] set-api-key : ', key);
     writeApiKey(key);
   });
+
+  ipcMain.handle('open-account-popup', () => {
+    console.log('Ouverture de la popup...');
+    v_popup = new BrowserWindow({
+      width: 400,
+      height: 300,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        nodeIntegration: false,
+        contextIsolation: true,
+      },
+    });
+
+    v_popup.loadURL('http://localhost:4200/account'); // ou un chemin spécifique si tu as une route Angular prévue
+    v_popup.on('closed', () => {
+      v_popup = null;
+    });
+  });
+
 
   const mainWindow = createWindow();
   createTray();

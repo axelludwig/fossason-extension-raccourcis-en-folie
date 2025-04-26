@@ -27,10 +27,4 @@ export class AppComponent {
       console.log('Run in browser');
     }
   }
-
-  ngOnInit() {
-    window.electronAPI.openAccountPage(() => {
-      this.router.navigate(['/account']);
-    });
-  }
 }

@@ -12,5 +12,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onVolumeMute: (cb) => ipcRenderer.on('volume-mute', cb),
     getApiKey: () => ipcRenderer.invoke('get-api-key'),
     setApiKey: (key) => ipcRenderer.invoke('set-api-key', key),
-    openAccountPage: (callback) => ipcRenderer.on('open-api-key-popup', callback)
+    openAccountPopup: () => ipcRenderer.invoke('open-account-popup')
 });
