@@ -155,6 +155,7 @@ app.whenReady().then(() => {
     v_popup = new BrowserWindow({
       width: 400,
       height: 300,
+      backgroundColor: '#000000',
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: false,
